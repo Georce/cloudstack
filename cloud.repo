@@ -1,0 +1,5 @@
+[cloud]
+name=cloud
+gpgcheck=0
+enabled=1
+baseurl=http://cloudstack.apt-get.eu/centos/4.4
