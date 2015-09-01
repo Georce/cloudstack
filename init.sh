@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if [ ! -d /var/cloudstack/management/.ssh ]; then
         mknod /dev/loop6 -m0660 b 7 6
 fi
