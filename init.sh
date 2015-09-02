@@ -1,22 +1,26 @@
 #!/bin/bash
+set -e
+
+PORT=${PORT:-"3306"}
+USER=${USER:-"root"}
 
 if [ ! -d /var/cloudstack/management/.ssh ]; then
         mknod /dev/loop6 -m0660 b 7 6
 fi
 sleep 5
 
-mysql -p"$MYSQL_ENV_MYSQL_ROOT_PASSWORD" -h"$MYSQL_PORT_3306_TCP_ADDR" \
+mysql -P"${PORT}" -u"${USER}" -p"${PASSWORD}" -h"${MYSQL}" \
    -e "show databases;"|grep -q cloud
-
+   
 case $? in
   1)
         echo "deploying new cloud databases"
-        cloudstack-setup-databases cloud:password@${MYSQL_PORT_3306_TCP_ADDR} \
-        --deploy-as=root:${MYSQL_ENV_MYSQL_ROOT_PASSWORD} -i localhost
+        cloudstack-setup-databases cloud:"${PASSWORD}"@"${MYSQL}":"${PORT}" \
+        --deploy-as="${USER}":"${PASSWORD}"
     ;;
   0)
         echo "using existing databases"
-        cloudstack-setup-databases cloud:password@${MYSQL_PORT_3306_TCP_ADDR}
+        cloudstack-setup-databases cloud:"${PASSWORD}"@"${MYSQL}":"${PORT}"
     ;;
   *)
         echo "cannot access database"
